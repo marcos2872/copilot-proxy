@@ -1,0 +1,25 @@
+services:
+  copilot-proxy:
+    build: .
+    ports:
+      - "8484:8484"
+    volumes:
+      - copilot-proxy-data:/root/.config/copilot-proxy
+    restart: always
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    ports:
+      - "3000:8080"
+    environment:
+      - OPENAI_API_BASE_URL=http://copilot-proxy:8484/v1
+      - OPENAI_API_KEY=sk-dummy
+    volumes:
+      - open-webui:/app/backend/data
+    depends_on:
+      - copilot-proxy
+    restart: always
+
+volumes:
+  copilot-proxy-data:
+  open-webui:
