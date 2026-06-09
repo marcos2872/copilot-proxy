@@ -1,6 +1,8 @@
 services:
   copilot-proxy:
-    build: .
+    build:
+      context: .
+      network: host
     ports:
       - "8484:8484"
     volumes:
