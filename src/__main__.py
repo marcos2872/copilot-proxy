@@ -10,7 +10,7 @@ from .auth import load_credentials, login
 def main():
     parser = argparse.ArgumentParser(description="GitHub Copilot Proxy Server")
     parser.add_argument("--host", default="0.0.0.0", help="Host to bind (default: 0.0.0.0)")
-    parser.add_argument("--port", type=int, default=8484, help="Port to bind (default: 8484)")
+    parser.add_argument("--port", type=int, default=7677, help="Port to bind (default: 7677)")
     parser.add_argument("--login", action="store_true", help="Force re-login before starting")
     args = parser.parse_args()
 

@@ -5,7 +5,7 @@ Proxy OpenAI-compatible que usa o GitHub Copilot como backend. Permite usar ferr
 ## Como funciona
 
 ```
-OpenWebUI / Cliente  →  Copilot Proxy (localhost:8484)  →  GitHub Copilot API
+OpenWebUI / Cliente  →  Copilot Proxy (localhost:7677)  →  GitHub Copilot API
      (OpenAI format)       /v1/chat/completions              (roteamento por modelo)
 ```
 
@@ -31,10 +31,10 @@ docker compose up -d
 Na primeira vez, autentique:
 
 ```bash
-curl -X POST http://localhost:8484/auth/login
+curl -X POST http://localhost:7677/auth/login
 ```
 
-Abra o link retornado no browser e entre o codigo. Pronto — acesse `http://localhost:3000` e os modelos do Copilot ja estarao disponiveis.
+Abra o link retornado no browser e entre o codigo. Pronto — acesse `http://localhost:7676` e os modelos do Copilot ja estarao disponiveis.
 
 ### Local (sem Docker)
 
@@ -68,7 +68,7 @@ O token é salvo em `~/.config/copilot-proxy/token.json`.
 ### Opções
 
 ```bash
-uv run copilot-proxy --host 0.0.0.0 --port 8484
+uv run copilot-proxy --host 0.0.0.0 --port 7677
 ```
 
 ## Configuração no OpenWebUI
@@ -81,7 +81,7 @@ Ja vem pré-configurado — o `docker-compose.yml` define `OPENAI_API_BASE_URL` 
 
 1. Vá em **Settings → Connections → OpenAI API**
 2. Configure:
-   - **URL:** `http://localhost:8484/v1`
+   - **URL:** `http://localhost:7677/v1`
    - **API Key:** `sk-dummy` (qualquer valor — o proxy gerencia a auth)
 3. Salve. Os modelos do Copilot aparecerão na lista.
 
@@ -139,7 +139,7 @@ nenhuma ferramenta** (OpenAPI vazio) e o modelo dirá que não tem a tool.
 ### 2. Subir o mcpo (na máquina, fora do container)
 
 ```bash
-uvx mcpo --config config-mcp.json --port 8000
+uvx mcpo --config config-mcp.json --port 7678
 ```
 
 Mantenha o `mcpo` rodando enquanto usar as ferramentas — ele segura os processos dos MCPs.
@@ -148,13 +148,13 @@ O `chrome-devtools` abre um Chrome real na sua máquina quando o modelo usa a to
 Confira que cada MCP expõe ferramentas (OpenAPI com `paths` não-vazio):
 
 ```bash
-curl -s http://localhost:8000/fetch/openapi.json | python3 -c "import sys,json; print(list(json.load(sys.stdin)['paths']))"
+curl -s http://localhost:7678/fetch/openapi.json | python3 -c "import sys,json; print(list(json.load(sys.stdin)['paths']))"
 ```
 
 ### 3. Registrar no OpenWebUI
 
 Cada MCP tem seu próprio **subpath** OpenAPI (`/chrome-devtools`, `/filesystem`, etc.) —
-nunca use `http://localhost:8000` sozinho. Há **duas formas** de registrar, e a URL muda
+nunca use `http://localhost:7678` sozinho. Há **duas formas** de registrar, e a URL muda
 conforme **quem busca o spec**:
 
 **Opção A — Manual (Settings → Tools).** A validação é feita pelo **navegador** (host),
@@ -162,9 +162,9 @@ então use `localhost`:
 
 | Nome | URL |
 |------|-----|
-| Chrome DevTools | `http://localhost:8000/chrome-devtools` |
-| Filesystem | `http://localhost:8000/filesystem` |
-| Fetch | `http://localhost:8000/fetch` |
+| Chrome DevTools | `http://localhost:7678/chrome-devtools` |
+| Filesystem | `http://localhost:7678/filesystem` |
+| Fetch | `http://localhost:7678/fetch` |
 
 **Opção B — Pré-configurado no `docker-compose.yml`.** Aqui quem busca o spec é o
 **backend** (container), que **não enxerga `localhost`** da máquina — use
@@ -176,8 +176,8 @@ serviço, já presente no compose):
       - ENABLE_PERSISTENT_CONFIG=false
       - >-
         TOOL_SERVER_CONNECTIONS=[
-        {"url":"http://host.docker.internal:8000/fetch","path":"openapi.json","auth_type":"bearer","key":"","config":{"enable":true}},
-        {"url":"http://host.docker.internal:8000/filesystem","path":"openapi.json","auth_type":"bearer","key":"","config":{"enable":true}}
+        {"url":"http://host.docker.internal:7678/fetch","path":"openapi.json","auth_type":"bearer","key":"","config":{"enable":true}},
+        {"url":"http://host.docker.internal:7678/filesystem","path":"openapi.json","auth_type":"bearer","key":"","config":{"enable":true}}
         ]
 ```
 
@@ -227,7 +227,7 @@ Roteamento:
 Se o servidor já estiver rodando sem autenticação:
 
 ```bash
-curl -X POST http://localhost:8484/auth/login
+curl -X POST http://localhost:7677/auth/login
 ```
 
 Resposta:

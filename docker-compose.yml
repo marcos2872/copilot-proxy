@@ -4,7 +4,7 @@ services:
       context: .
       network: host
     ports:
-      - "8484:8484"
+      - "7677:7677"
     volumes:
       - copilot-proxy-data:/root/.config/copilot-proxy
     restart: always
@@ -14,18 +14,18 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
-      - "3000:8080"
+      - "7676:8080"
     environment:
-      - OPENAI_API_BASE_URL=http://copilot-proxy:8484/v1
+      - OPENAI_API_BASE_URL=http://copilot-proxy:7677/v1
       - OPENAI_API_KEY=sk-dummy
       - ENABLE_PERSISTENT_CONFIG=false
       - >-
         TOOL_SERVER_CONNECTIONS=[
-        {"url":"http://host.docker.internal:8000/chrome-devtools","path":"openapi.json","auth_type":"bearer","key":"","config":{"enable":true}},
-        {"url":"http://host.docker.internal:8000/filesystem","path":"openapi.json","auth_type":"bearer","key":"","config":{"enable":true}},
-        {"url":"http://host.docker.internal:8000/sequential-thinking","path":"openapi.json","auth_type":"bearer","key":"","config":{"enable":true}},
-        {"url":"http://host.docker.internal:8000/fetch","path":"openapi.json","auth_type":"bearer","key":"","config":{"enable":true}},
-        {"url":"http://host.docker.internal:8000/time","path":"openapi.json","auth_type":"bearer","key":"","config":{"enable":true}}
+        {"url":"http://host.docker.internal:7678/chrome-devtools","path":"openapi.json","auth_type":"bearer","key":"","config":{"enable":true}},
+        {"url":"http://host.docker.internal:7678/filesystem","path":"openapi.json","auth_type":"bearer","key":"","config":{"enable":true}},
+        {"url":"http://host.docker.internal:7678/sequential-thinking","path":"openapi.json","auth_type":"bearer","key":"","config":{"enable":true}},
+        {"url":"http://host.docker.internal:7678/fetch","path":"openapi.json","auth_type":"bearer","key":"","config":{"enable":true}},
+        {"url":"http://host.docker.internal:7678/time","path":"openapi.json","auth_type":"bearer","key":"","config":{"enable":true}}
         ]
     volumes:
       - open-webui:/app/backend/data
